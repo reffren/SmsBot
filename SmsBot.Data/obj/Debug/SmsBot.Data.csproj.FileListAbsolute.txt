@@ -1,0 +1,13 @@
+c:\Users\Tim\documents\visual studio 2013\Projects\SmsBot\SmsBot.Data\obj\Debug\SmsBot.Data.csprojResolveAssemblyReference.cache
+c:\Users\Tim\documents\visual studio 2013\Projects\SmsBot\SmsBot.Data\obj\Debug\SmsBot.Data.Properties.Resources.resources
+c:\Users\Tim\documents\visual studio 2013\Projects\SmsBot\SmsBot.Data\obj\Debug\SmsBot.Data.csproj.GenerateResource.Cache
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\SmsBot.Data.dll.config
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\SmsBot.Data.dll
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\SmsBot.Data.pdb
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\EntityFramework.dll
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\EntityFramework.xml
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\obj\Debug\SmsBot.Data.dll
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\obj\Debug\SmsBot.Data.pdb
+C:\Users\Tim\Documents\Visual Studio 2013\Projects\SmsBot\SmsBot.Data\bin\Debug\SmsServiceDB.db
