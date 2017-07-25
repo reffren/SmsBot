@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concrete\EFContext.cs" />
-    <Compile Include="Concrete\Repository.cs" />
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
