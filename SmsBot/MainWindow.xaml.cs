@@ -36,6 +36,8 @@ namespace SmsBot
         static string message = null;
         static bool flag = true;
         public int LabelSmsInQueueCounter = 0;
+        public int LabelSmsSendedCounter = 0;
+        public string LabelPercentCounter = "0%";
 
         static Queue<Phone> queueList = null;
 
@@ -47,38 +49,51 @@ namespace SmsBot
         public MainWindow()
         {
             InitializeComponent();
+            comPort.Text = "0";
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 2);
         }
 
         private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
             port = new SerialPort();
-            InitializePort();
-            threadGetSendSms = new Thread(GetSendSms);
-            threadHandleSms = new Thread(HandleSms);
-            threadGetSendSms.Start();
-            threadHandleSms.Start();
-            StartBtn.IsEnabled = false;
-            dispatcherTimer.Start();
+
+            int p = Int32.Parse(comPort.Text);
+            if (p > 0)
+            {
+                InitializePort(comPort.Text);
+                comPort.IsEnabled = false;
+                threadGetSendSms = new Thread(GetSendSms);
+                threadHandleSms = new Thread(HandleSms);
+                threadGetSendSms.Start();
+                threadHandleSms.Start();
+                StartBtn.IsEnabled = false;
+                dispatcherTimer.Start();
+            }
+            else
+            {
+
+            }
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             LabelSmsInQueue.Content = LabelSmsInQueueCounter;
+            LabelPercent.Content = LabelPercentCounter;
+            LabelSmsSended.Content = LabelSmsSendedCounter;
         }
 
-        private static void InitializePort()
+        private static void InitializePort(string comPort)
         {
-            port.BaudRate = 9600; 
-            port.DataBits = 8; 
+            port.BaudRate = 9600;
+            port.DataBits = 8;
 
-            port.StopBits = StopBits.One;         
-            port.Parity = Parity.None; 
+            port.StopBits = StopBits.One;
+            port.Parity = Parity.None;
 
             port.Encoding = Encoding.GetEncoding("windows-1251");
-            port.PortName = "COM12";
+            port.PortName = "COM" + comPort;
 
             try
             {
@@ -143,6 +158,7 @@ namespace SmsBot
                     {
                         queueList.Enqueue(new Phone() { Date = DateTime.Now.ToString(), NumPhone = numPhoneClient, Message = messageFromClient });
 
+                        LabelPercentCounter = "10%";
                         numPhoneClient = null;
                         messageFromClient = null;
                         deleteCount++; //count messages in memory of sim-card
@@ -161,7 +177,7 @@ namespace SmsBot
 
                         port.Write("AT+CMGF=0\r\n"); // устанавливается цифровой режим PDU для отправки сообщений
                         System.Threading.Thread.Sleep(500);
-
+                        LabelPercentCounter = "80%";
                         // encoding phone number to PDU format
                         string result = "";
                         if ((telNumber.Length % 2) > 0) telNumber += "F";
@@ -194,13 +210,15 @@ namespace SmsBot
 
                         double lenMes = textSms.Length / 2; // получаем количество октет в десятичной системе
 
-                        //     port.Write("AT+CMGS=" + (Math.Ceiling(lenMes)).ToString() + "\r\n");
+                        port.Write("AT+CMGS=" + (Math.Ceiling(lenMes)).ToString() + "\r\n");
                         System.Threading.Thread.Sleep(500);
 
                         textSms = "00" + textSms;
+                        LabelPercentCounter = "90%";
 
                         port.Write(textSms + char.ConvertFromUtf32(26) + "\r\n"); // опять же с комбинацией CTRL-Z на конце
                         System.Threading.Thread.Sleep(5000);
+                        LabelPercentCounter = "100%";
 
                         port.Write("AT+CMGF=1 \r\n"); // устанавливается текстовый режим для отправки сообщений
                         System.Threading.Thread.Sleep(500);
@@ -208,6 +226,8 @@ namespace SmsBot
                         flag = true;
                         message = null;
                         phoneForSending = null;
+                        LabelSmsSendedCounter++;
+                        LabelPercentCounter = "0%";
                     }
                 }
             }
@@ -224,10 +244,13 @@ namespace SmsBot
                 {
                     flag = false;
                     LabelSmsInQueueCounter++;
+                    LabelPercentCounter = "20%";
                     Phone phone = queueList.Dequeue();
+                    LabelPercentCounter = "30%";
                     phoneForSending = phone.NumPhone;
                     context.Phones.Add(phone);//10c  
                     context.SaveChangesAsync();
+                    LabelPercentCounter = "40%";
 
                     try
                     {
@@ -239,24 +262,30 @@ namespace SmsBot
                         Stream dataStream = request.GetRequestStream();
                         dataStream.Write(byteArray, 0, byteArray.Length);
                         dataStream.Close();
-
+                        LabelPercentCounter = "50%";
                         var response = request.GetResponse();
                         var stream = response.GetResponseStream();
                         var sr = new StreamReader(stream);
                         var content = sr.ReadToEnd(); //"{\"train\":\"97\",\"car\":\"2\",\"way\":\"2\",\"section\":\"B\"}";
                         response.Close();
-
+                        LabelPercentCounter = "60%";
                         dynamic json = JValue.Parse(content);
                         string train = json.Train;
                         string car = json.Car;
                         string way = json.Way;
                         string section = json.Section;
-
+                        LabelPercentCounter = "70%";
                         message = "Ваш поезд - " + train + ", Вагон - " + car + ", Путь - " + way + ", Секция - " + section;
                     }
-                    catch (Exception e) {  }
+                    catch (Exception e) { }
                 }
             }
         }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
     }
 }
