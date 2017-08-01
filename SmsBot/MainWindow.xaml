@@ -14,6 +14,7 @@
                     </LinearGradientBrush>
                 </Menu.Background>
                 <MenuItem Header="_Файл" FontSize="14">
+                    <MenuItem Header="Сохранить как" Click="Save_Click"/>
                     <MenuItem Header="Выход" Click="Exit_Click"/>
                 </MenuItem>
             </Menu>

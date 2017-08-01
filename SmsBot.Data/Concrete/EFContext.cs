@@ -12,5 +12,10 @@ namespace SmsBot.Data.Concrete
     {
         public EFContext() : base("DefaultConnection") { }
         public DbSet<Phone> Phones { get; set; }
+
+        //public IQueryable<Phone> Phone
+        //{
+        //    get { return Phone; }
+        //}
     }
 }

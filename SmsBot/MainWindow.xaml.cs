@@ -21,6 +21,8 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Windows.Threading;
+using System.Collections;
+using Microsoft.Win32;
 
 namespace SmsBot
 {
@@ -282,6 +284,28 @@ namespace SmsBot
             }
         }
 
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = @"C:\test";
+            string fileName = null;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel Files | *.xls";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                fileName = saveFileDialog.SafeFileName;
+                string fullPath = saveFileDialog.FileName;
+                filePath = fullPath.Replace(fileName, "");
+            }
+
+            using (EFContext context = new EFContext())
+            {
+                var list = context.Phones.ToList();
+                ExcelHelpers.ExportToExcel(list, filePath, fileName);
+            }
+            MessageBox.Show("Файл сохранен");
+        }
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
